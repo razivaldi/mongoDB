@@ -10,8 +10,8 @@ router.get("/", function (req, res) {
 
 router.get("/products", productsController.getProducts);
 router.get("/product/:productId", productsController.getProductById);
-// router.get("/product", productsController.getProductByQuery);
-router.get("/product", productsController.getProductByQuery2);
+router.get("/product", productsController.getProductByQuery);
+// router.get("/product", productsController.getProductByQuery2);
 router.get("/delete-product", productsController.postDeleteProduct);
 router.get("/user-cart", productsController.getCart)
 
@@ -19,6 +19,8 @@ router.get("/user-cart", productsController.getCart)
 // router.get("/cart/:cartId", cartController.getCartById);
 // router.post("/cart", cartController.postAddCart);
 router.post("/add-product-cart", productsController.postAddProductToCart)
+router.post("/delete-cart-item", productsController.deleteCart)
+router.post("/clear-cart", productsController.clearCart)
 
 // router.post("/delete-cart", cartController.postDeleteCart);
 // router.get("/get-cart", shopController.getCart);

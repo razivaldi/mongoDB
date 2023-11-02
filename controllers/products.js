@@ -1,14 +1,30 @@
 const product = require("../models/product");
 const Product = require("../models/product");
 const User = require("../models/user");
+const { validationResult } = require("express-validator");
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  //const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const desc = req.body.description;
   const color = req.body.color;
   const category = req.body.category;
+
+  const errors = validationResult(req); //menghasilkan array
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed, entered data is incorrect.");
+    error.statusCode = 522;
+    throw error;
+  }
+
+  if (!req.file) {
+    const error = new Error("No image provided.");
+    error.statusCode = 523;
+    throw error;
+  }
+
+  const imageUrl = req.file.path.replace("\\", "/");
 
   const product = new Product({
     title: title,
@@ -40,12 +56,10 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProductByQuery = (req, res, next) => {
-  const { color, category, price } = req.query;
+  const { color, price } = req.query;
 
   Product.find({
-    colors: color,
-    category: category,
-    price: price,
+    $or: [{ colors: color }, { price: price }],
   })
     .then((products) => {
       if (products.length === 0) {
@@ -133,4 +147,24 @@ exports.getCart = (req, res, next) => {
     .then((result) => {
       res.send(result);
     });
+};
+
+exports.deleteCart = (req, res, next) => {
+  const productId = req.body.productId;
+
+  req.user
+    .deleteCartItem(productId)
+    .then((cart) => {
+      res.json(cart);
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.clearCart = (req, res, next) => {
+  req.user
+    .clearCart()
+    .then(() => {
+      res.send("cart cleared");
+    })
+    .catch((err) => console.log(err));
 };

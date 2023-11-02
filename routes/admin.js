@@ -3,8 +3,16 @@ const router = express.Router();
 const productsController = require("../controllers/products");
 const userController = require("../controllers/user");
 const cartController = require("../controllers/carts");
+const { body } = require("express-validator");
 
-router.post("/product", productsController.postAddProduct);
+router.post("/product",
+[
+  body("title").trim().isLength({ min: 5 }),
+  body("price").trim().isLength({ min: 3 }),
+  body("price").toInt(),
+]
+,productsController.postAddProduct);
+
 router.get("/carts", productsController.getAllCart);
 // router.post("/edit-product", productsController.postEditProduct);
 // router.post("/delete-product", productsController.postDeleteProduct);
