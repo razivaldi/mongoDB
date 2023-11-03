@@ -48,7 +48,7 @@ exports.getProducts = (req, res, next) => {
   // Product.find({ price : {$gte : 900000}}).then(products => {
   // Product.find({ title: /jaket/i }, "title price colors ")
   Product.find()
-    .populate("userId", "name")
+    .populate("userId", "name email -_id")
     .then((products) => {
       res.json(products);
     })

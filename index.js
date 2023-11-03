@@ -10,6 +10,8 @@ const path = require("path");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
+const authRoute = require("./routes/auth")
+
 
 console.log("start express server");
 
@@ -26,6 +28,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/auth',authRoute);
 
 app.use((req, res, next) => {
   console.log("Time: ", Date.now());
