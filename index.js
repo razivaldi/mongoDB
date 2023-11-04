@@ -10,8 +10,7 @@ const path = require("path");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
-const authRoute = require("./routes/auth")
-
+const authRoute = require("./routes/auth");
 
 console.log("start express server");
 
@@ -28,19 +27,19 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/auth',authRoute);
+app.use("/auth", authRoute);
 
-app.use((req, res, next) => {
-  console.log("Time: ", Date.now());
-  User.findById("653f7da45b77849b2f0b4157")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.use((req, res, next) => {
+//   console.log("Time: ", Date.now());
+//   User.findById("653f7da45b77849b2f0b4157")
+//     .then((user) => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 

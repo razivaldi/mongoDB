@@ -33,7 +33,7 @@ exports.postAddProduct = (req, res, next) => {
     description: desc,
     colors: color,
     category: category,
-    userId: req.user,
+    userId: req.userId,
   });
 
   product

@@ -57,7 +57,6 @@ exports.login = (req, res, next) => {
       }
 
       loadedUser = user;
-
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {

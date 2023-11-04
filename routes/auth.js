@@ -28,7 +28,6 @@ router.post('/signup',[
   .not().isEmpty()
 ], authController.signUp)
 
-
 router.post('/login',[
   body('email')
   .isEmail()
