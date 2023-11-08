@@ -4,6 +4,7 @@ const sequelize = require("../util/database");
 const Cart = require("../models/cart");
 const CartItem = require("../models/cartItems");
 const ImageProduct = require("../models/imageProduct");
+const axios = require("axios");
 
 exports.getCart = (req, res, next) => {
   req.user
@@ -84,3 +85,16 @@ exports.getOrders = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getCategories = (req, res, next) => {
+  axios
+    .get("https://63cdf885d2e8c29a9bced636.mockapi.io/api/v1/categories")
+    .then((response) => {
+      res.status(200).json(response.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      console.log("call category");
+    });
+};

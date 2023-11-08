@@ -27,9 +27,9 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  const userId = req.params.userId;
+  const userId = req.userId;
 
-  User.findByPk(userId)
+  User.findById(userId)
     .then((user) => {
       res.json(user);
     })

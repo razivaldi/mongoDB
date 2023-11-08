@@ -11,10 +11,12 @@ const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
 const authRoute = require("./routes/auth");
+const cookieParser = require("cookie-parser");
+const fs = require("fs");
 
 console.log("start express server");
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -26,7 +28,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use("/auth", authRoute);
 
 // app.use((req, res, next) => {
@@ -52,17 +56,24 @@ const fileStorage = multer.diskStorage({
   },
 });
 
+
 const fileFilter = (req, file, cb) => {
+  const fileExis = fs.readdirSync('images').filter(name => {
+   return name.includes(file.originalname)
+  })
+  
+  console.log("file exis: ", fileExis)
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
     file.mimetype === "image/jpeg" ||
     file.mimetype === "image/webp"
   ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
+    if (fileExis.length > 0) {
+      cb(null, false);
+    } else {
+      cb(null, true);
+    }}
 };
 
 app.use(

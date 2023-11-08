@@ -5,6 +5,7 @@ const userController = require("../controllers/user");
 const cartController = require("../controllers/carts");
 const { body } = require("express-validator");
 const isAuth = require("../middleware/is-auth");
+const isAdmin = require("../middleware/is-admin");
 
 router.post(
   "/product",
@@ -24,7 +25,7 @@ router.post("/add-user", userController.postAddUser);
 // router.post("/delete-user", userController.postDeleteUser);
 // router.post("/edit-user", userController.postEditUser);
 // router.get("/users", userController.getUsers);
-// router.get("/user/userId", userController.getUser);
+router.get("/user/userId", isAuth, isAdmin, userController.getUser);
 // router.get("/user", userController.getUserByQuery);
 // router.get("/cart/:userId", cartController.getCartByUserId);
 // router.get("/user-products", productsController.getProductByUser);

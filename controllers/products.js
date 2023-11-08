@@ -2,6 +2,7 @@ const product = require("../models/product");
 const Product = require("../models/product");
 const User = require("../models/user");
 const { validationResult } = require("express-validator");
+const fs = require("fs");
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
@@ -19,11 +20,11 @@ exports.postAddProduct = (req, res, next) => {
   }
 
   if (!req.file) {
-    const error = new Error("No image provided.");
+    const error = new Error("No image provided or file with same name already exist");
     error.statusCode = 523;
     throw error;
   }
-
+ 
   const imageUrl = req.file.path.replace("\\", "/");
 
   const product = new Product({
@@ -70,14 +71,47 @@ exports.getProductByQuery = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getProductsBySelect = (req, res, next) => {
-  Product.find()
-    .select("title price -_id")
-    .populate("userId", "name")
-    .then((products) => {
-      res.json(products);
+exports.postUpdateProductsByUserLogin = (req, res, next) => {
+  
+  if (!req.file) {
+    const error = new Error("No image provided or File with the same name already exist");
+    error.statusCode = 523;
+    throw error;
+  }
+  console.log(req.file)
+
+  const imageUrl = req.file.path.replace("\\", "/");
+
+  Product.findOneAndUpdate(
+    { $and: [{ userId: req.userId }, { _id: req.body.productId }] },
+    {
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description,
+      imageUrl: imageUrl,
+      colors: req.body.colors,
+    }
+  )
+    .then((result) => {
+      if (!result) {
+        const error = new Error("Access Forbidden");
+        error.statusCode = 403;
+        throw error;
+      }
     })
-    .catch((err) => console.log(err));
+    .then(() => {
+      return Product.findOne({ _id: req.body.productId })
+    })
+    .then((result) => {
+      res.json(result)
+    })
+    .catch((err) => {
+      if(!err.statusCode){
+        err.statusCode = 500;
+      }
+      console.log(err)
+      next(err);
+    });
 };
 
 exports.getProductById = (req, res, next) => {

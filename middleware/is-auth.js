@@ -10,6 +10,9 @@ module.exports = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
+
+  // const token = req.cookies.token;
+
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "somesupersecret");
@@ -25,5 +28,5 @@ module.exports = (req, res, next) => {
   }
 
   req.userId = decodedToken.userId;
-  next(); 
+  next();
 };
