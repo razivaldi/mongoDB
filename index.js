@@ -56,28 +56,34 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-
 const fileFilter = (req, file, cb) => {
-  const fileExis = fs.readdirSync('images').filter(name => {
-   return name.includes(file.originalname)
-  })
-  
-  console.log("file exis: ", fileExis)
+  const fileExis = fs.readdirSync("images").filter((name) => {
+    return name.includes(file.originalname);
+  });
+
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
     file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/webp"
+    file.mimetype === "image/webp" ||
+    file.mimetype === "image/avif"
   ) {
-    if (fileExis.length > 0) {
-      cb(null, false);
-    } else {
-      cb(null, true);
-    }}
+    // if (fileExis.length > 0) {
+    //   const error = new Error("File already exists");
+    //   error.statusCode = 523;
+    //   cb(error, false);
+    // } else {
+    //   cb(null, true);
+    // }
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
 };
 
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 7) 
+  // multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
 );
 
 app.use("/admin", adminRouter);

@@ -98,3 +98,17 @@ exports.getCategories = (req, res, next) => {
       console.log("call category");
     });
 };
+
+exports.postAddReview = (req, res, next) => {
+  const productId = req.body.productId;
+  const message = req.body.message;
+  const userId = req.userId;
+
+  Product.findById(productId)
+    .then((product) => {
+      product.addReview(userId, message);
+    })
+    .then(() => {
+      res.send("review added");
+    });
+};

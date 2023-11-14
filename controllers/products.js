@@ -6,7 +6,7 @@ const fs = require("fs");
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  //const imageUrl = req.body.imageUrl;
+  const brand = req.body.brand;
   const price = req.body.price;
   const desc = req.body.description;
   const color = req.body.color;
@@ -19,13 +19,18 @@ exports.postAddProduct = (req, res, next) => {
     throw error;
   }
 
-  if (!req.file) {
-    const error = new Error("No image provided or file with same name already exist");
+  if (!req.files) {
+    const error = new Error(
+      "No image provided or file with same name already exist"
+    );
     error.statusCode = 523;
     throw error;
   }
- 
-  const imageUrl = req.file.path.replace("\\", "/");
+
+  const imageUrl = req.files.map((file) => {
+    return file.path.replace("\\", "/");
+  });
+  console.log(imageUrl);
 
   const product = new Product({
     title: title,
@@ -35,6 +40,8 @@ exports.postAddProduct = (req, res, next) => {
     colors: color,
     category: category,
     userId: req.userId,
+    category: category,
+    brand: brand,
   });
 
   product
@@ -72,13 +79,14 @@ exports.getProductByQuery = (req, res, next) => {
 };
 
 exports.postUpdateProductsByUserLogin = (req, res, next) => {
-  
   if (!req.file) {
-    const error = new Error("No image provided or File with the same name already exist");
+    const error = new Error(
+      "No image provided or File with the same name already exist"
+    );
     error.statusCode = 523;
     throw error;
   }
-  console.log(req.file)
+  console.log(req.file);
 
   const imageUrl = req.file.path.replace("\\", "/");
 
@@ -100,16 +108,16 @@ exports.postUpdateProductsByUserLogin = (req, res, next) => {
       }
     })
     .then(() => {
-      return Product.findOne({ _id: req.body.productId })
+      return Product.findOne({ _id: req.body.productId });
     })
     .then((result) => {
-      res.json(result)
+      res.json(result);
     })
     .catch((err) => {
-      if(!err.statusCode){
+      if (!err.statusCode) {
         err.statusCode = 500;
       }
-      console.log(err)
+      console.log(err);
       next(err);
     });
 };
@@ -118,6 +126,10 @@ exports.getProductById = (req, res, next) => {
   const productId = req.params.productId;
 
   Product.findById(productId)
+    .populate({
+      path: "reviews",
+      populate: { path: "userId", select: "name -_id" },
+    })
     .then((product) => {
       res.json(product);
     })

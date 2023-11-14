@@ -8,7 +8,7 @@ const productSchema = new Schema(
       required: true,
     },
     imageUrl: {
-      type: String,
+      type: Array,
       required: true,
     },
     price: {
@@ -20,12 +20,26 @@ const productSchema = new Schema(
       required: true,
     },
     colors: {
-      type: String,
+      type: Array,
       required: true,
     },
     category: {
       type: String,
     },
+    brand: {
+      type: String,
+    },
+    reviews: [
+      {
+        message : {
+          type: String
+        },
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      }
+    ],
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -34,5 +48,10 @@ const productSchema = new Schema(
   },
   { timestamps: true }
 );
+
+productSchema.methods.addReview = function (userId, message) {
+  this.reviews.push({ userId, message });
+  return this.save();
+}
 
 module.exports = mongoose.model("Product", productSchema);
