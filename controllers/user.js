@@ -17,7 +17,7 @@ exports.postAddUser = (req, res, next) => {
 };
 
 exports.getUsers = (req, res, next) => {
-  User.findAll()
+  User.find()
     .then((result) => {
       res.send({ data: result, total: result.length });
     })
@@ -63,19 +63,26 @@ exports.getUserByQuery = (req, res, next) => {
     });
 };
 
-exports.postEditUser = (req, res, next) => {
-  const { userId, newName, newEmail } = req.body;
+exports.postUpdateUser = (req, res, next) => {
 
-  User.findByPk(userId)
-    .then((user) => {
-      user.name = newName;
-      user.email = newEmail;
-
-      return user.save();
-    })
+  User.findOneAndUpdate(
+    { _id: req.body.userId },
+    {
+      name: req.body.newName,
+      email: req.body.newEmail,
+      role: req.body.newRole,
+    }
+  )
     .then((result) => {
-      console.log("user updated");
-      res.json(result);
+      if (!result) {
+        const error = new Error("user not found");
+        error.statusCode = 403;
+        throw error;
+      }
+      return User.find() 
+    })
+    .then(result => {
+      res.json(result)
     })
     .catch((err) => {
       console.log(err);
@@ -85,13 +92,17 @@ exports.postEditUser = (req, res, next) => {
 exports.postDeleteUser = (req, res, next) => {
   const { userId } = req.body;
 
-  User.findByPk(userId)
-    .then((user) => {
-      return user.destroy();
-    })
+  User.findByIdAndDelete(userId)
     .then((result) => {
-      console.log("user deleted");
-      res.json(result);
+      if (!result) {
+        const error = new Error("user not found");
+        error.statusCode = 403;
+        throw error;
+      }
+      return User.find()
+    })
+    .then(result => {
+      res.json(result)
     })
     .catch((err) => {
       console.log(err);

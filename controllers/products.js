@@ -10,6 +10,7 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const desc = req.body.description;
   const color = req.body.color;
+  const stock = req.body.stock;
   const category = req.body.category;
 
   const errors = validationResult(req); //menghasilkan array
@@ -42,6 +43,7 @@ exports.postAddProduct = (req, res, next) => {
     userId: req.userId,
     category: category,
     brand: brand,
+    stock: stock,
   });
 
   product
@@ -78,48 +80,42 @@ exports.getProductByQuery = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postUpdateProductsByUserLogin = (req, res, next) => {
-  if (!req.file) {
-    const error = new Error(
-      "No image provided or File with the same name already exist"
-    );
-    error.statusCode = 523;
-    throw error;
-  }
-  console.log(req.file);
+exports.postUpdateProduct = (req, res, next) => {
+  const productId = req.body.productId;
+  const title = req.body.title;
+  const brand = req.body.brand;
+  const price = req.body.price;
+  const description = req.body.description;
+  // const colors = req.body.colors;
+  const category = req.body.category;
+  const featured = req.body.featured;
+  const stock = req.body.stock;
+  const imageUrl = req.files ? req.files.map((file) => {
+    return file.path.replace("\\", "/");
+  }) : null
 
-  const imageUrl = req.file.path.replace("\\", "/");
+  Product.findById(productId)
+  .then(product => {  
+    product.title = title;
+    product.brand = brand;
+    product.price = price;
+    product.description = description;
+    // product.colors = colors;
+    product.category = category;
+    product.featured = featured;
+    product.stock = stock;
 
-  Product.findOneAndUpdate(
-    { $and: [{ userId: req.userId }, { _id: req.body.productId }] },
-    {
-      title: req.body.title,
-      price: req.body.price,
-      description: req.body.description,
-      imageUrl: imageUrl,
-      colors: req.body.colors,
+    if(imageUrl.length > 0) {
+      product.imageUrl = imageUrl;
     }
-  )
-    .then((result) => {
-      if (!result) {
-        const error = new Error("Access Forbidden");
-        error.statusCode = 403;
-        throw error;
-      }
-    })
-    .then(() => {
-      return Product.findOne({ _id: req.body.productId });
-    })
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      console.log(err);
-      next(err);
-    });
+    return product.save()
+  })
+  .then(result => {
+    res.status(200).json({message: 'Product Updated', result: result})
+  })
+  .catch(err => {
+    console.log(err);
+  })
 };
 
 exports.getProductById = (req, res, next) => {
@@ -214,3 +210,15 @@ exports.clearCart = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.deleteSomeProducts = (req, res, next) => {
+  const productId = req.body.productId;
+  console.log(productId);
+  Product.deleteMany({ _id: { $in: productId } })
+  .then(result => {
+    res.status(200).json({message: 'Product Deleted', result: result})
+  })
+  .catch(err => {
+    console.log(err);
+  })
+}

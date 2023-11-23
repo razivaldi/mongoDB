@@ -102,13 +102,15 @@ exports.getCategories = (req, res, next) => {
 exports.postAddReview = (req, res, next) => {
   const productId = req.body.productId;
   const message = req.body.message;
+  const rating = req.body.rating;
   const userId = req.userId;
 
   Product.findById(productId)
     .then((product) => {
-      product.addReview(userId, message);
+      product.addReview(userId, message, rating);
     })
     .then(() => {
-      res.send("review added");
-    });
+      res.send({ status: 201, message: "review added" });
+    })
+    .catch((err) => console.log(err));
 };

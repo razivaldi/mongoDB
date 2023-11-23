@@ -16,7 +16,8 @@ const fs = require("fs");
 
 console.log("start express server");
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+// app.use(cors());
+app.use(cors({ credentials: true, origin: "*" }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -82,7 +83,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 7) 
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("imageUrl", 7) 
   // multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
 );
 

@@ -13,17 +13,18 @@ router.get("/products", productsController.getProducts);
 router.get("/product/:productId", productsController.getProductById);
 router.get("/product", productsController.getProductByQuery);
 // router.get("/product", productsController.getProductByQuery2);
-router.get("/delete-product", productsController.postDeleteProduct);
+router.post("/delete-some-products", productsController.deleteSomeProducts)
+router.post("/delete-product", productsController.postDeleteProduct);
 router.get("/user-cart", productsController.getCart);
-router.post("/update-product", isAuth, productsController.postUpdateProductsByUserLogin);
+router.post("/update-product", productsController.postUpdateProduct);
 // router.get("/carts", cartController.getCarts);
 // router.get("/cart/:cartId", cartController.getCartById);
 // router.post("/cart", cartController.postAddCart);
-router.post("/add-product-cart", productsController.postAddProductToCart);
+router.post("/add-product-cart",isAuth, productsController.postAddProductToCart);
 router.post("/delete-cart-item", productsController.deleteCart);
 router.post("/clear-cart", productsController.clearCart);
 router.get("/categories", shopController.getCategories);
-router.post("/add-review",isAuth, shopController.postAddReview);
+router.post("/add-review", isAuth, shopController.postAddReview);
 
 // router.post("/delete-cart", cartController.postDeleteCart);
 // router.get("/get-cart", shopController.getCart);

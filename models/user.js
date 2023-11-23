@@ -38,9 +38,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.methods.addToCart = function (product) {
+userSchema.methods.addToCart = function (productId) {
   const cartProductIndex = this.cart.items.findIndex((cp) => {
-    return cp.productId.toString() === product._id.toString();
+    return cp.productId.toString() === productId.toString();
   });
 
   let newQty = 1;
@@ -51,7 +51,7 @@ userSchema.methods.addToCart = function (product) {
     updatedCartItems[cartProductIndex].quantity = newQty;
   } else {
     updatedCartItems.push({
-      productId: product._id,
+      productId: productId,
       quantity: newQty,
     });
   }

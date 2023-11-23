@@ -29,16 +29,29 @@ const productSchema = new Schema(
     brand: {
       type: String,
     },
+    stock: {
+      type: Number,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    shipping: {
+      type: Boolean,
+    },
     reviews: [
       {
-        message : {
-          type: String
+        message: {
+          type: String,
+        },
+        rating: {
+          type: Number,
         },
         userId: {
           type: Schema.Types.ObjectId,
           ref: "User",
         },
-      }
+      },
     ],
     userId: {
       type: Schema.Types.ObjectId,
@@ -49,9 +62,9 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-productSchema.methods.addReview = function (userId, message) {
-  this.reviews.push({ userId, message });
+productSchema.methods.addReview = function (userId, message, rating) {
+  this.reviews.push({ userId, message, rating });
   return this.save();
-}
+};
 
 module.exports = mongoose.model("Product", productSchema);
