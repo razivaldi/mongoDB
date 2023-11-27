@@ -1,7 +1,6 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 const CartItem = require("../models/cartItems");
-const ImageProduct = require("../models/imageProduct");
 const axios = require("axios");
 
 exports.getCart = (req, res, next) => {
