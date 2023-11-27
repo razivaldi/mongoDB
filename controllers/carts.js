@@ -36,12 +36,12 @@ exports.postAddCart = (req, res, next) => {
     });
 };
 
-exports.postDeleteCart = async (req, res, next) => {
-  const cartId = req.body.cartId;
+// exports.postDeleteCart = async (req, res, next) => {
+//   const cartId = req.body.cartId;
 
-  await sequelize.query(`DELETE FROM carts WHERE id = ${cartId}`, {
-    model: Cart,
-    mapToModel: true,
-  });
-  res.send("berhasil dihapus");
-};
+//   await sequelize.query(`DELETE FROM carts WHERE id = ${cartId}`, {
+//     model: Cart,
+//     mapToModel: true,
+//   });
+//   res.send("berhasil dihapus");
+// };
