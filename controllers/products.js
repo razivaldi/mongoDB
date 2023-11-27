@@ -8,10 +8,11 @@ exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
   const brand = req.body.brand;
   const price = req.body.price;
-  const desc = req.body.description;
-  const color = req.body.color;
+  const description = req.body.description;
+  const colors = req.body.colors;
   const stock = req.body.stock;
   const category = req.body.category;
+  const featured = req.body.featured;
 
   const errors = validationResult(req); //menghasilkan array
   if (!errors.isEmpty()) {
@@ -37,11 +38,12 @@ exports.postAddProduct = (req, res, next) => {
     title: title,
     price: price,
     imageUrl: imageUrl,
-    description: desc,
-    colors: color,
+    description: description,
+    colors: JSON.parse(colors),
     category: category,
     userId: req.userId,
     category: category,
+    featured: featured,
     brand: brand,
     stock: stock,
   });
@@ -86,36 +88,38 @@ exports.postUpdateProduct = (req, res, next) => {
   const brand = req.body.brand;
   const price = req.body.price;
   const description = req.body.description;
-  // const colors = req.body.colors;
+  const colors = req.body.colors;
   const category = req.body.category;
   const featured = req.body.featured;
   const stock = req.body.stock;
-  const imageUrl = req.files ? req.files.map((file) => {
-    return file.path.replace("\\", "/");
-  }) : null
+  const imageUrl = req.files
+    ? req.files.map((file) => {
+        return file.path.replace("\\", "/");
+      })
+    : null;
 
   Product.findById(productId)
-  .then(product => {  
-    product.title = title;
-    product.brand = brand;
-    product.price = price;
-    product.description = description;
-    // product.colors = colors;
-    product.category = category;
-    product.featured = featured;
-    product.stock = stock;
+    .then((product) => {
+      product.title = title;
+      product.brand = brand;
+      product.price = price;
+      product.description = description;
+      product.colors = JSON.parse(colors);
+      product.category = category;
+      product.featured = featured;
+      product.stock = stock;
 
-    if(imageUrl.length > 0) {
-      product.imageUrl = imageUrl;
-    }
-    return product.save()
-  })
-  .then(result => {
-    res.status(200).json({message: 'Product Updated', result: result})
-  })
-  .catch(err => {
-    console.log(err);
-  })
+      if (imageUrl.length > 0) {
+        product.imageUrl = imageUrl;
+      }
+      return product.save();
+    })
+    .then((result) => {
+      res.status(200).json({ message: "Product Updated", result: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProductById = (req, res, next) => {
@@ -137,7 +141,9 @@ exports.postDeleteProduct = (req, res, next) => {
 
   Product.findByIdAndDelete(productId)
     .then(() => {
-      res.send("Product Deleted");
+      Product.find().then((products) => {
+        res.json(products);
+      });
     })
     .catch((err) => console.log(err));
 };
@@ -215,10 +221,10 @@ exports.deleteSomeProducts = (req, res, next) => {
   const productId = req.body.productId;
   console.log(productId);
   Product.deleteMany({ _id: { $in: productId } })
-  .then(result => {
-    res.status(200).json({message: 'Product Deleted', result: result})
-  })
-  .catch(err => {
-    console.log(err);
-  })
-}
+    .then((result) => {
+      res.status(200).json({ message: "Product Deleted", result: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};

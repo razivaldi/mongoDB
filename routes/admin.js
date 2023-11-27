@@ -6,6 +6,7 @@ const cartController = require("../controllers/carts");
 const { body } = require("express-validator");
 const isAuth = require("../middleware/is-auth");
 const isAdmin = require("../middleware/is-admin");
+const orderController = require("../controllers/orders");
 
 router.post(
   "/add-product",
@@ -26,6 +27,7 @@ router.post("/delete-user", userController.postDeleteUser);
 router.post("/update-user", userController.postUpdateUser);
 // router.get("/users", userController.getUsers);
 router.get("/users", userController.getUsers);
+router.get("/user-orders", orderController.getAllOrders);
 // router.get("/user", userController.getUserByQuery);
 // router.get("/cart/:userId", cartController.getCartByUserId);
 // router.get("/user-products", productsController.getProductByUser);

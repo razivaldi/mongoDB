@@ -4,6 +4,7 @@ const productsController = require("../controllers/products");
 const cartController = require("../controllers/carts");
 const shopController = require("../controllers/shop");
 const isAuth = require("../middleware/is-auth");
+const orderController = require("../controllers/orders");
 
 router.get("/", function (req, res) {
   res.send("Welcome Coding");
@@ -24,8 +25,9 @@ router.post("/add-product-cart",isAuth, productsController.postAddProductToCart)
 router.post("/delete-cart-item", productsController.deleteCart);
 router.post("/clear-cart", productsController.clearCart);
 router.get("/categories", shopController.getCategories);
+router.post ("/user-orders", isAuth, orderController.getOrderByUser)
 router.post("/add-review", isAuth, shopController.postAddReview);
-
+router.post("/add-order", isAuth, orderController.postAddOrder);
 // router.post("/delete-cart", cartController.postDeleteCart);
 // router.get("/get-cart", shopController.getCart);
 // router.get("/product-detail/:productId", productsController.getProductDetail);
