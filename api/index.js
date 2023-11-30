@@ -13,8 +13,9 @@ const multer = require("multer");
 const authRoute = require("../routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
-require('dotenv').config();
+const dotenv = require('dotenv')
 
+dotenv.config();
 
 console.log("start express server");
 
