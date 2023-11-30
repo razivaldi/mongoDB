@@ -13,6 +13,8 @@ const multer = require("multer");
 const authRoute = require("../routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
+require('dotenv').config();
+
 
 console.log("start express server");
 
@@ -109,7 +111,7 @@ app.use((error, req, res, next) => {
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    "mongodb+srv://razivaldi15:vxoH1wgyCcO2tmZu@cluster0.682rfr0.mongodb.net/ecommerse?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.USER_ID}:${process.env.USER_KEY}:vxoH1wgyCcO2tmZu@cluster0.682rfr0.mongodb.net/ecommerse?retryWrites=true&w=majority`
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));

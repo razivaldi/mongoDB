@@ -5,9 +5,9 @@ module.exports = (req, res, next) => {
       if (user.role === "admin") {
         next();
       } else {
-        const error = new Error("Forbidden");
-        error.statusCode = 403;
-        throw error;
+        res.status(201).json({
+          message: "You dont have permission to access",
+        })
       }
     })
     .catch((err) => {
