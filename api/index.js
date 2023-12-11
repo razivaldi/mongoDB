@@ -1,16 +1,15 @@
 const express = require("express");
 require('dotenv').config()
 const app = express();
-const router = express.Router();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const adminRouter = require("../routes/admin");
-const shopRouter = require("../routes/shop");
+const adminRouter = require("./routes/admin");
+const shopRouter = require("./routes/shop");
 const path = require("path");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
-const authRoute = require("../routes/auth");
+const authRoute = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
