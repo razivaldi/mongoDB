@@ -13,7 +13,6 @@ const multer = require("multer");
 const authRoute = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
-const DB = process.env.MONGODB
 
 console.log("start express server");
 
@@ -110,7 +109,7 @@ app.use((error, req, res, next) => {
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    DB
+    process.env.MONGODB_URI,
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));
