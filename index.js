@@ -113,3 +113,5 @@ mongoose
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));
+
+module.exports = app
