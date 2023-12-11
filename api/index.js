@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use("/auth", authRoute);
+app.use("/api/auth", authRoute);
 
 // app.use((req, res, next) => {
 //   console.log("Time: ", Date.now());
@@ -46,7 +46,7 @@ app.use("/auth", authRoute);
 //     });
 // });
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/api/images", express.static(path.join(__dirname, "images")));
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -87,8 +87,8 @@ app.use(
   // multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
 );
 
-app.use("/admin", adminRouter);
-app.use("/shop", shopRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/shop", shopRouter);
 // app.use("/middle", middleRouter);
 // app.use("/adminpost", adminpostRouter);
 
