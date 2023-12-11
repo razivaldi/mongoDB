@@ -112,6 +112,6 @@ mongoose
     process.env.MONGODB_URI,
   )
   .then((res) => app.listen(8000))
+  .then((res) => console.log("connected"))
   .catch((err) => console.log(err));
 
-module.exports = app
