@@ -83,7 +83,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array("imageUrl", 7) 
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("imageUrl", 7)
   // multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
 );
 
@@ -113,3 +113,5 @@ mongoose
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));
+
+module.exports = app

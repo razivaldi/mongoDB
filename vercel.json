@@ -1,6 +1,3 @@
 {
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
-  "env" : {
-    "MONGODB_URI": "mongodb+srv://razivaldi15:vxoH1wgyCcO2tmZu@cluster0.682rfr0.mongodb.net/ecommerse?retryWrites=true&w=majority"
-  }
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
 }
