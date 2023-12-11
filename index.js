@@ -1,18 +1,19 @@
 const express = require("express");
+require('dotenv').config()
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const adminRouter = require("../routes/admin");
-const shopRouter = require("../routes/shop");
-const User = require("../models/user");
+const adminRouter = require("./routes/admin");
+const shopRouter = require("./routes/shop");
 const path = require("path");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
-const authRoute = require("../routes/auth");
+const authRoute = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
+const DB = process.env.MONGODB
 
 console.log("start express server");
 
@@ -109,7 +110,7 @@ app.use((error, req, res, next) => {
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    "mongodb+srv://razivaldi15:vxoH1wgyCcO2tmZu@cluster0.682rfr0.mongodb.net/ecommerse?retryWrites=true&w=majority"
+    DB
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));

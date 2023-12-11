@@ -1,18 +1,19 @@
 const express = require("express");
+require('dotenv').config()
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const adminRouter = require("../routes/admin");
-const shopRouter = require("../routes/shop");
-const User = require("../models/user");
+const adminRouter = require("./routes/admin");
+const shopRouter = require("./routes/shop");
 const path = require("path");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
-const authRoute = require("../routes/auth");
+const authRoute = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
+const DB = process.env.MONGODB
 
 console.log("start express server");
 
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use("/api/auth", authRoute);
+app.use("/auth", authRoute);
 
 // app.use((req, res, next) => {
 //   console.log("Time: ", Date.now());
@@ -46,7 +47,7 @@ app.use("/api/auth", authRoute);
 //     });
 // });
 
-app.use("/api/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -87,8 +88,8 @@ app.use(
   // multer({ storage: fileStorage, fileFilter: fileFilter }).single("image") //single upload file, image adalah nama field
 );
 
-app.use("/api/admin", adminRouter);
-app.use("/api/shop", shopRouter);
+app.use("/admin", adminRouter);
+app.use("/shop", shopRouter);
 // app.use("/middle", middleRouter);
 // app.use("/adminpost", adminpostRouter);
 
@@ -109,7 +110,7 @@ app.use((error, req, res, next) => {
 mongoose.set("strictQuery", true);
 mongoose
   .connect(
-    "mongodb+srv://razivaldi15:vxoH1wgyCcO2tmZu@cluster0.682rfr0.mongodb.net/ecommerse?retryWrites=true&w=majority"
+    DB
   )
   .then((res) => app.listen(8000))
   .catch((err) => console.log(err));
